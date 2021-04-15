@@ -11,6 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class dashboard extends AppCompatActivity {
 
     int [] images={R.drawable.uber,R.drawable.black};
@@ -107,9 +117,41 @@ public class dashboard extends AppCompatActivity {
                 FragmentTransaction trs=getSupportFragmentManager().beginTransaction();
                 trs.setCustomAnimations(R.anim.slide_up,R.anim.slide_down);
                 trs.replace(R.id.ss,mp).commit();
+                serverreq();
             }
         });
 
+
+    }
+
+
+    public  void serverreq(){
+        RequestQueue request= Volley.newRequestQueue(this);
+        String postUrl = "https://junaisnodejs.herokuapp.com/sms";
+        JSONObject postData=new JSONObject();
+
+        try {
+            postData.put("name", "Junaid");
+            postData.put("job", "Software Engineer");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, postUrl, postData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println(response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        request.add(jsonObjectRequest);
 
     }
 }

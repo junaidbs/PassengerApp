@@ -5,11 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public static   void calllog(FragmentTransaction ftlog) {
+    public static   void calllog(FragmentTransaction ftlog,String vid) {
         System.out.println("called");
         ftlog.setCustomAnimations(R.anim.slide_up,R.anim.slide_down);
 
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        ftlog.replace(R.id.logfrag,new otpfragment(),"dd").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        ftlog.replace(R.id.logfrag,new otpfragment(vid),"dd").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 
 
 
@@ -54,7 +57,15 @@ public class MainActivity extends AppCompatActivity {
         Fragment fr=getSupportFragmentManager().findFragmentById(R.id.logfrag);
         FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
         loginfrag1 log=new loginfrag1();        //initat login fragment
-        ft.replace(R.id.logfrag,log, "NewFragmentTag").commit();    //replace current fragment
+        if(FirebaseAuth.getInstance().getUid()==null){
+            ft.replace(R.id.logfrag,log, "NewFragmentTag").commit();    //replace current fragment
+        }
+        else {
+
+            Intent intent=new Intent(getApplicationContext(),dashboard.class);
+            startActivity(intent);
+        }
+
 
 
 
