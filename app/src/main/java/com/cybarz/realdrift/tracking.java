@@ -16,6 +16,18 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.mapbox.api.geocoding.v5.GeocodingCriteria;
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.geojson.Point;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class tracking  implements LocationListener {
     LocationManager locationmnger;
     mapping start_point;
@@ -51,7 +63,38 @@ public class tracking  implements LocationListener {
         System.out.println(location.getLatitude()+"  logdd "+location.getLongitude());
         double a=location.getLatitude();
 
-        start_point.starting.setText(String.valueOf(a));
+        MapboxGeocoding reverseGeocode = MapboxGeocoding.builder()
+                .accessToken("sk.eyJ1IjoianVuYWlka21sIiwiYSI6ImNrbmx0eTYzZjBvaDkyb3BtMmExOXhheW8ifQ.O38gl66EDyK06YXZc2BlYA")
+                .query(Point.fromLngLat(location.getLongitude(),location.getLatitude() ))
+                .geocodingTypes(GeocodingCriteria.TYPE_PLACE)
+                .build();
+
+        reverseGeocode.enqueueCall(new Callback<GeocodingResponse>() {
+            @Override
+            public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                System.out.println("caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalllllllllllllllllllllllleeeeeeeeeeeeeedd");
+               if(response.body()!=null){
+
+                   GeocodingResponse g = response.body();
+
+                   start_point.starting.setText(String.valueOf(g.features().get(0).placeName()));
+
+
+                   System.out.println(g.features().get(0).placeName());
+
+               }
+
+            }
+
+            @Override
+            public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+
+            }
+        });
+
+
+        start_point.lattitude=location.getLatitude();
+        start_point.longtitude=location.getLongitude();
         locationmnger.removeUpdates(this);
 
     }

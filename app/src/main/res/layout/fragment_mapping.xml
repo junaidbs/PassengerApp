@@ -119,6 +119,8 @@
                     <EditText
                         android:id="@+id/ept"
                         android:paddingTop="10dp"
+                        android:editable="false"
+
 
                         android:paddingBottom="12dp"
                         android:paddingLeft="12dp"
@@ -148,7 +150,8 @@
                    android:paddingBottom="64dp">
 
                    <Button
-                       android:background="@drawable/button"
+                       android:id="@+id/hirecart"
+                       android:backgroundTint="@color/red"
                        android:layout_width="wrap_content"
                        android:fontFamily="@font/segoeui"
                        android:text="Hire Cart"
